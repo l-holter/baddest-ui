@@ -1,22 +1,14 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 
-interface FormData {
-  fullName: string;
-  email: string;
-  dateOfBirth: string;
-}
-
-interface FormErrors {
-  fullName?: string;
-  email?: string;
-  dateOfBirth?: string;
-}
+import { FormData, FormErrors } from "./types";
+import { EmailInput, validateEmail } from './EmailInput';
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
     email: '',
+    emailProvider: '',
     dateOfBirth: '',
   });
 
@@ -25,18 +17,15 @@ const RegistrationForm = () => {
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
-    
+
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Full name is required';
     } else if (formData.fullName.length < 2) {
       newErrors.fullName = 'Name must be at least 2 characters long';
     }
 
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
+    const emailValidate = validateEmail(formData.email, formData.emailProvider);
+    newErrors.email = emailValidate.email;
 
     if (!formData.dateOfBirth) {
       newErrors.dateOfBirth = 'Date of birth is required';
@@ -92,9 +81,8 @@ const RegistrationForm = () => {
           name="fullName"
           value={formData.fullName}
           onChange={handleChange}
-          className={`w-full px-4 py-2 rounded-lg border ${
-            errors.fullName ? 'border-red-500' : 'border-gray-300'
-          } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
+          className={`w-full px-4 py-2 rounded-lg border ${errors.fullName ? 'border-red-500' : 'border-gray-300'
+            } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
           placeholder="John Doe"
         />
         {errors.fullName && (
@@ -102,25 +90,23 @@ const RegistrationForm = () => {
         )}
       </div>
 
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          Email Address
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 rounded-lg border ${
-            errors.email ? 'border-red-500' : 'border-gray-300'
-          } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
-          placeholder="john@example.com"
-        />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-        )}
-      </div>
+      <EmailInput
+        email={formData.email}
+        emailProvider={formData.emailProvider}
+        errors={errors}
+        onEmailChange={(s) => {
+          setFormData(prev => ({ ...prev, ["email"]: s }));
+          if (errors["email" as keyof FormErrors]) {
+            setErrors(prev => ({ ...prev, ["email"]: undefined }));
+          }
+        }}
+        onEmailProviderChange={(s) => {
+          setFormData(prev => ({ ...prev, ["emailProvider"]: s }));
+          if (errors["email" as keyof FormErrors]) {
+            setErrors(prev => ({ ...prev, ["email"]: undefined }));
+          }
+        }}
+      />
 
       <div>
         <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-1">
@@ -132,9 +118,8 @@ const RegistrationForm = () => {
           name="dateOfBirth"
           value={formData.dateOfBirth}
           onChange={handleChange}
-          className={`w-full px-4 py-2 rounded-lg border ${
-            errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'
-          } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
+          className={`w-full px-4 py-2 rounded-lg border ${errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'
+            } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
         />
         {errors.dateOfBirth && (
           <p className="mt-1 text-sm text-red-600">{errors.dateOfBirth}</p>
