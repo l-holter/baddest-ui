@@ -95,11 +95,22 @@ const RegistrationForm = () => {
 
   const handleImageClick = (e: React.MouseEvent<HTMLInputElement>) => {
     const selectedCountryCode = e.target.src.split('/').slice(-1)[0].split('-')[0];
-    console.log("selected country", selectedCountryCode)
+    const countryCodeToNumber = {
+      "NO": "+47",
+      "SE": "+46",
+      "DK": "+45",
+      "FI": "+358",
+      "IS": "+354",
+      "FO": "+298",
+      "GB": "+44",
+      "FR": "+33",
+      "DE": "+49"     
+    };
+    const countryCodeValue = `${selectedCountryCode} / ${countryCodeToNumber[selectedCountryCode]}`;
     setIsCountryCodeDialogOpen(false);
     setFormData({
       ...formData,
-      countryCode: selectedCountryCode
+      countryCode: countryCodeValue
     })
   }
   const handleSliderChange = (index: number, value: number) => {
