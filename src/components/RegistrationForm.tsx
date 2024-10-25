@@ -137,8 +137,8 @@ const RegistrationForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <dialog open={isCountryCodeDialogOpen}>
+    <>
+    <dialog open={isCountryCodeDialogOpen} style={{zIndex:1000}}>
         <div>
           Click your country
           <div>
@@ -150,6 +150,7 @@ const RegistrationForm = () => {
           </div>
         </div>
       </dialog>
+      <form onSubmit={handleSubmit} className="space-y-6">      
       <div>
         <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
           Full Name
@@ -270,6 +271,7 @@ const RegistrationForm = () => {
         Register
       </button>
     </form>
+    </>
   );
 };
 
