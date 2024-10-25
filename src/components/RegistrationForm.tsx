@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 interface FormData {
   fullName: string;
   email: string;
-  phoneNumber: string;
+  phoneNumberComplete: string;
   countryCode: string;
 }
 
 interface FormErrors {
   fullName?: string;
   email?: string;
-  phoneNumber?: string;
+  phoneNumberComplete?: string;
   countryCode?: string;
 }
 
@@ -19,7 +21,7 @@ const RegistrationForm = () => {
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
     email: '',
-    phoneNumber: '',
+    phoneNumberComplete: "50505050",
     countryCode: ''
   });
   const [isCountryCodeDialogOpen, setIsCountryCodeDialogOpen] = useState(false);
@@ -27,6 +29,11 @@ const RegistrationForm = () => {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+
+  const [phoneNumber1, setPhoneNumber1] = useState(50);
+  const [phoneNumber2, setPhoneNumber2] = useState(50);
+  const [phoneNumber3, setPhoneNumber3] = useState(50);
+  const [phoneNumber4, setPhoneNumber4] = useState(50);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -47,16 +54,6 @@ const RegistrationForm = () => {
       newErrors.countryCode = 'Country code is required';
     } else if (formData.countryCode.length != 2) {
       newErrors.countryCode = 'Code must be at exactly 2 characters long';
-    }
-
-    if (!formData.phoneNumber) {
-      newErrors.phoneNumber = 'Phone number is required';
-    } else {
-      const date = new Date(formData.phoneNumber);
-      const today = new Date();
-      if (date > today) {
-        newErrors.phoneNumber = 'Date cannot be in the future';
-      }
     }
 
     setErrors(newErrors);
@@ -97,6 +94,35 @@ const RegistrationForm = () => {
       countryCode: selectedCountryCode
     })
   }
+  const handleSliderChange = (index: number, value: number) => {
+    switch (index) {
+      case 1:
+        setPhoneNumber1(value);
+        break;
+      case 2:
+        setPhoneNumber2(value);
+        break;
+      case 3:
+        setPhoneNumber3(value);
+        break;
+      case 4:
+        setPhoneNumber4(value);
+        break;
+      default:
+        break;
+    }
+  
+    const formattedPhoneNumber1 = phoneNumber1.toString().padStart(2, '0');
+    const formattedPhoneNumber2 = phoneNumber2.toString().padStart(2, '0');
+    const formattedPhoneNumber3 = phoneNumber3.toString().padStart(2, '0');
+    const formattedPhoneNumber4 = phoneNumber4.toString().padStart(2, '0');
+  
+    const completeNumber = `${formattedPhoneNumber1}${formattedPhoneNumber2}${formattedPhoneNumber3}${formattedPhoneNumber4}`;
+    setFormData((prevData) => ({
+      ...prevData,
+      phoneNumberComplete: completeNumber,
+    }));
+  };
 
   if (submitted) {
     return (
@@ -180,17 +206,60 @@ const RegistrationForm = () => {
         <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
           Phone number
         </label>
-        <input
-          type="text"
-          id="phoneNumber"
-          name="phoneNumber"
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 rounded-lg border ${errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
-            } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
-        />
-        {errors.phoneNumber && (
-          <p className="mt-1 text-sm text-red-600">{errors.phoneNumber}</p>
+        <div>
+          <Slider
+            min={0}
+            max={99}
+            defaultValue={50}
+            step={1}
+            onChange={(value) => handleSliderChange(1, value)}
+            onChangeComplete={(value) => handleSliderChange(1, value)}
+            id="phoneNumber1"
+            value={phoneNumber1}
+          />
+          <p className="text-center">{phoneNumber1.toString().padStart(2, '0')}</p>
+          <p className="text-center">+</p>
+          <Slider
+            min={0}
+            max={99}
+            defaultValue={50}
+            step={1}
+            onChange={(value) => handleSliderChange(2, value)}
+            onChangeComplete={(value) => handleSliderChange(2, value)}
+            id="phoneNumber2"
+            value={phoneNumber2}
+          />
+          <p className="text-center">{phoneNumber2.toString().padStart(2, '0')}</p>
+          <p className="text-center">+</p>
+          <Slider
+            min={0}
+            max={99}
+            defaultValue={50}
+            step={1}
+            onChange={(value) => handleSliderChange(3, value)}
+            onChangeComplete={(value) => handleSliderChange(3, value)}
+            id="phoneNumber3"
+            value={phoneNumber3}
+          />
+          <p className="text-center">{phoneNumber3.toString().padStart(2, '0')}</p>
+          <p className="text-center">+</p>
+          <Slider
+            min={0}
+            max={99}
+            defaultValue={50}
+            step={1}
+            onChange={(value) => handleSliderChange(4, value)}
+            onChangeComplete={(value) => handleSliderChange(4, value)}
+            id="phoneNumber4"
+            value={phoneNumber4}
+          />
+          <p className="text-center">{phoneNumber4.toString().padStart(2, '0')}</p>
+          <p className="text-center">=</p>
+          <p className="text-center">{formData.phoneNumberComplete}</p>
+        </div>
+        
+        {errors.phoneNumberComplete && (
+          <p className="mt-1 text-sm text-red-600">{errors.phoneNumberComplete}</p>
         )}
       </div>
 
