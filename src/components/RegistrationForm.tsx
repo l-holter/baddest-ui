@@ -4,20 +4,23 @@ import { Check } from 'lucide-react';
 interface FormData {
   fullName: string;
   email: string;
-  dateOfBirth: string;
+  phoneNumber: string;
+  countryCode: string;
 }
 
 interface FormErrors {
   fullName?: string;
   email?: string;
-  dateOfBirth?: string;
+  phoneNumber?: string;
+  countryCode?: string;
 }
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
     email: '',
-    dateOfBirth: '',
+    phoneNumber: '',
+    countryCode: ''
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -38,13 +41,19 @@ const RegistrationForm = () => {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    if (!formData.dateOfBirth) {
-      newErrors.dateOfBirth = 'Date of birth is required';
+    if (!formData.countryCode.trim()) {
+      newErrors.countryCode = 'Country code is required';
+    } else if (formData.countryCode.length != 2) {
+      newErrors.countryCode = 'Code must be at exactly 2 characters long';
+    }
+
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = 'Phone number is required';
     } else {
-      const date = new Date(formData.dateOfBirth);
+      const date = new Date(formData.phoneNumber);
       const today = new Date();
       if (date > today) {
-        newErrors.dateOfBirth = 'Date cannot be in the future';
+        newErrors.phoneNumber = 'Date cannot be in the future';
       }
     }
 
@@ -123,21 +132,31 @@ const RegistrationForm = () => {
       </div>
 
       <div>
-        <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-1">
-          Date of Birth
-        </label>
-        <input
-          type="date"
-          id="dateOfBirth"
-          name="dateOfBirth"
-          value={formData.dateOfBirth}
+      <input
+          type="text"
+          id="countryCode"
+          name="countryCode"
+          value={formData.countryCode}
           onChange={handleChange}
           className={`w-full px-4 py-2 rounded-lg border ${
-            errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'
+            errors.countryCode ? 'border-red-500' : 'border-gray-300'
           } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
         />
-        {errors.dateOfBirth && (
-          <p className="mt-1 text-sm text-red-600">{errors.dateOfBirth}</p>
+        <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
+          Phone number
+        </label>
+        <input
+          type="text"
+          id="phoneNumber"
+          name="phoneNumber"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          className={`w-full px-4 py-2 rounded-lg border ${
+            errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
+          } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
+        />
+        {errors.phoneNumber && (
+          <p className="mt-1 text-sm text-red-600">{errors.phoneNumber}</p>
         )}
       </div>
 
