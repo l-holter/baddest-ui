@@ -22,13 +22,15 @@ const RegistrationForm = () => {
     phoneNumber: '',
     countryCode: ''
   });
+  const [isCountryCodeDialogOpen, setIsCountryCodeDialogOpen] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
-    
+
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Full name is required';
     } else if (formData.fullName.length < 2) {
@@ -77,6 +79,25 @@ const RegistrationForm = () => {
     }
   };
 
+  const handleCountryCodeClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    const randomElement = (array: Array<string>) => array[Math.floor(Math.random() * array.length)];
+    const countries = ["NO", "SE", "DK", "FI", "IS", "FO", "GB", "FR", "DE"];
+    const images = Array.from(Array(9).keys()).map(i => `images/${randomElement(countries)}-${i+1}.png`);
+    console.log("images", images);
+    setImages(images);
+    setIsCountryCodeDialogOpen(true);
+  }
+
+  const handleImageClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    const selectedCountryCode = e.target.src.split('/').slice(-1)[0].split('-')[0];
+    console.log("selected country", selectedCountryCode)
+    setIsCountryCodeDialogOpen(false);
+    setFormData({
+      ...formData,
+      countryCode: selectedCountryCode
+    })
+  }
+
   if (submitted) {
     return (
       <div className="text-center">
@@ -91,6 +112,18 @@ const RegistrationForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <dialog open={isCountryCodeDialogOpen}>
+        <div>
+          Click your country
+          <div>
+            <div className='grid grid-cols-3 gap-3'>
+              {images.map(image => (
+                <img width={250} height={250} src={image} onClick={handleImageClick} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </dialog>
       <div>
         <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
           Full Name
@@ -101,9 +134,8 @@ const RegistrationForm = () => {
           name="fullName"
           value={formData.fullName}
           onChange={handleChange}
-          className={`w-full px-4 py-2 rounded-lg border ${
-            errors.fullName ? 'border-red-500' : 'border-gray-300'
-          } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
+          className={`w-full px-4 py-2 rounded-lg border ${errors.fullName ? 'border-red-500' : 'border-gray-300'
+            } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
           placeholder="John Doe"
         />
         {errors.fullName && (
@@ -121,9 +153,8 @@ const RegistrationForm = () => {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          className={`w-full px-4 py-2 rounded-lg border ${
-            errors.email ? 'border-red-500' : 'border-gray-300'
-          } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
+          className={`w-full px-4 py-2 rounded-lg border ${errors.email ? 'border-red-500' : 'border-gray-300'
+            } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
           placeholder="john@example.com"
         />
         {errors.email && (
@@ -132,15 +163,19 @@ const RegistrationForm = () => {
       </div>
 
       <div>
-      <input
+
+        <label htmlFor="countryCode" className="block text-sm font-medium text-gray-700 mb-1">
+          Country
+        </label>
+        <input
           type="text"
           id="countryCode"
           name="countryCode"
           value={formData.countryCode}
           onChange={handleChange}
-          className={`w-full px-4 py-2 rounded-lg border ${
-            errors.countryCode ? 'border-red-500' : 'border-gray-300'
-          } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
+          onClick={handleCountryCodeClick}
+          className={`w-full px-4 py-2 rounded-lg border ${errors.countryCode ? 'border-red-500' : 'border-gray-300'
+            } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
         />
         <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
           Phone number
@@ -151,9 +186,8 @@ const RegistrationForm = () => {
           name="phoneNumber"
           value={formData.phoneNumber}
           onChange={handleChange}
-          className={`w-full px-4 py-2 rounded-lg border ${
-            errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
-          } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
+          className={`w-full px-4 py-2 rounded-lg border ${errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
+            } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
         />
         {errors.phoneNumber && (
           <p className="mt-1 text-sm text-red-600">{errors.phoneNumber}</p>
