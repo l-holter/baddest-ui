@@ -1,14 +1,15 @@
 
 
 export interface FormData {
-  fullName: string;
+  name: string;
   email: string;
   emailProvider: string;
-  dateOfBirth: string;
+  phoneNumberComplete: string;
+  countryCode: string;
 }
 
 export interface FormErrors {
-  fullName?: string;
+  name?: string;
   email?: string;
-  dateOfBirth?: string;
+  coontryCode?: string;
 }

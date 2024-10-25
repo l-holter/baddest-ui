@@ -56,6 +56,7 @@ export function EmailInput({ email, emailProvider, onEmailChange, onEmailProvide
           id="email"
           name="email"
           value={email}
+          onChange={() => { }}
           onKeyDown={handleKeyDown}
           className={`grow w-full px-4 py-2 rounded-lg border ${errors.email ? 'border-red-500' : 'border-gray-300'
             } focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200`}
