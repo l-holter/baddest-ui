@@ -89,7 +89,7 @@ const RegistrationForm = () => {
       "DE",
     ];
     const images = Array.from(Array(9).keys()).map(
-      (i) => `images/${randomElement(countries)}-${i + 1}.png`
+      (i) => `/images/${randomElement(countries)}-${i + 1}.png`
     );
     console.log("images", images);
     setImages(images);
